@@ -1,0 +1,11 @@
+{
+  "clientId": "MyAwesomeClient",
+  "rootUrl": "https://www.keycloak.org/app/",
+  "redirectUris": [
+    "https://www.keycloak.org/app/*"
+  ],
+  "webOrigins": [
+    "https://www.keycloak.org/app/"
+  ],
+  "adminUrl": "https://www.keycloak.org/app/"
+}

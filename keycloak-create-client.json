@@ -1,11 +1,10 @@
 {
   "clientId": "MyAwesomeClient",
-  "rootUrl": "https://www.keycloak.org/app/",
+  "rootUrl": "http://localhost:8080/",
   "redirectUris": [
-    "https://www.keycloak.org/app/*"
+    "http://localhost:8080/oauth2/callback"
   ],
   "webOrigins": [
-    "https://www.keycloak.org/app/"
-  ],
-  "adminUrl": "https://www.keycloak.org/app/"
+    "http://localhost:8080/"
+  ]
 }

@@ -4,25 +4,24 @@ services:
     image: trinodb/trino
     ports:
       - "8080:8080"
-      - "9990:9990"
-    volumes:
-      - type: bind
-        source: ./trino-config.properties
-        target: /etc/trino/config.properties
-        read_only: true
-      - type: bind
-        source: ./wait-for-deps.sh
-        target: /wait-for-deps.sh
-        read_only: true
-    links:
-      - keycloak
-    depends_on:
-      - keycloak
-    command: ["./wait-for-deps.sh", "/usr/lib/trino/bin/run-trino"]
-  keycloak:
-    image: quay.io/keycloak/keycloak:15.0.2
-    ports:
-      - "8081:8080"
-    environment:
-      - KEYCLOAK_PASSWORD=admin
-      - KEYCLOAK_USER=admin
+#    volumes:
+#      - type: bind
+#        source: ./trino-config.properties
+#        target: /etc/trino/config.properties
+#        read_only: true
+#      - type: bind
+#        source: ./wait-for-deps.sh
+#        target: /wait-for-deps.sh
+#        read_only: true
+#    links:
+#      - keycloak
+#    depends_on:
+#      - keycloak
+#    command: ["./wait-for-deps.sh", "/usr/lib/trino/bin/run-trino"]
+#  keycloak:
+#    image: quay.io/keycloak/keycloak:15.0.2
+#    ports:
+#      - "8081:8080"
+#    environment:
+#      - KEYCLOAK_PASSWORD=admin
+#      - KEYCLOAK_USER=admin

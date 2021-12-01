@@ -1,27 +1,57 @@
 version: "3.9"
 services:
+  setup:
+    image: hashicorp/terraform
+    ports:
+      - "8082:8082"
+    volumes:
+      - "${HOME}/.aws/credentials:/root/.aws/credentials:ro"
+      - type: bind
+        source: ./data-setup/run.sh
+        target: /run.sh
+        read_only: true
+      - type: bind
+        source: ./data-setup
+        target: /data-setup
+      - type: bind
+        source: ./health
+        target: /health
+    environment:
+      - BUCKET_NAME=llamas-are-awesome-2
+    entrypoint: ["/bin/sh"]
+    command: ["./data-setup/run.sh"]
+  trino-cli:
+    build: ./trino-cli
+    container_name: trino-cli
+    command: ["tail","-f","/var/log/bootstrap.log"]
+  trino-setup:
+    build: ./trino-setup
+    volumes:
+      - type: bind
+        source: ./data-setup
+        target: /data-setup
+      - type: bind
+        source: ./health
+        target: /health
+      - type: bind
+        source: ./trino-setup
+        target: /trino-setup
+    command: ["/trino-setup/run.sh"]
   trino:
     image: trinodb/trino
     ports:
       - "8080:8080"
-#    volumes:
-#      - type: bind
-#        source: ./trino-config.properties
-#        target: /etc/trino/config.properties
-#        read_only: true
-#      - type: bind
-#        source: ./wait-for-deps.sh
-#        target: /wait-for-deps.sh
-#        read_only: true
-#    links:
-#      - keycloak
-#    depends_on:
-#      - keycloak
-#    command: ["./wait-for-deps.sh", "/usr/lib/trino/bin/run-trino"]
-#  keycloak:
-#    image: quay.io/keycloak/keycloak:15.0.2
-#    ports:
-#      - "8081:8080"
-#    environment:
-#      - KEYCLOAK_PASSWORD=admin
-#      - KEYCLOAK_USER=admin
+    volumes:
+      - "${HOME}/.aws/credentials:/root/.aws/credentials:ro"
+      - type: bind
+        source: ./trino-setup/trino-catalog-hive.properties
+        target: /etc/catalog/hive.properties
+        read_only: true
+      - type: bind
+        source: ./trino/wait-for-deps.sh
+        target: /wait-for-deps.sh
+        read_only: true
+      - type: bind
+        source: ./health
+        target: /health
+    command: ["./wait-for-deps.sh", "/usr/lib/trino/bin/run-trino"]

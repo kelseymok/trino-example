@@ -39,7 +39,7 @@ gen_secret() {
 }
 
 token=$(get_token)
-#create_client ${token}
+create_client ${token}
 id=$(get_id_of_client ${token})
 sed -i '.bak' -E "s/http-server.authentication.oauth2.client-id.*/http-server.authentication.oauth2.client-id=${id}/" trino-config.properties
 

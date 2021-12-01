@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  setup:
+  data-setup:
     image: hashicorp/terraform
     ports:
       - "8082:8082"
@@ -17,7 +17,7 @@ services:
         source: ./health
         target: /health
     environment:
-      - BUCKET_NAME=llamas-are-awesome-2
+      - BUCKET_NAME=${BUCKET_NAME}
     entrypoint: ["/bin/sh"]
     command: ["./data-setup/run.sh"]
   trino-cli:
@@ -46,6 +46,14 @@ services:
       - type: bind
         source: ./trino-setup/trino-catalog-hive.properties
         target: /etc/catalog/hive.properties
+        read_only: true
+      - type: bind
+        source: ./trino-setup/trino-resource-groups.properties
+        target: /etc/resource-groups.properties
+        read_only: true
+      - type: bind
+        source: ./trino-setup/trino-config.properties
+        target: /etc/trino/config.properties
         read_only: true
       - type: bind
         source: ./trino/wait-for-deps.sh

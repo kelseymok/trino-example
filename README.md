@@ -10,7 +10,7 @@ This is a [WIP] example of a single-node trino instance used for a configuration
 
 ## Quickstart
 * Authenticate to AWS and set credentials in your [default profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
-* To bring up the stack: `docker-compose up`
+* To bring up the stack: `BUCKET_NAME=<some-unique-bucket-name> docker-compose up`
 * Access the Trino GUI ([http://localhost:8080](http://localhost:8080))
 * Run queries against Trino: `docker exec -it trino-cli trino --server trino:8080 --catalog hive-hadoop2 --schema default`
 
@@ -37,6 +37,8 @@ This is a [WIP] example of a single-node trino instance used for a configuration
 
 As part of the `docker-compose up` command that you ran as part of the [Setup](#setup), it created an S3 bucket, some data in the bucket, and some Glue entities including a database and a crawler. This crawler scans your bucket and creates a Hive metadata table for the data in your bucket (you can see the your table in Glue -- it should contain schema data -- once you've manually run the crawler). Your goal is to access that data via the Trino CLI.
 
+* Run the crawler that's pointed at your S3 bucket
+![crawler.png](crawler.png)
 * Set up a Hive connector for S3 according to the [documented configuration parameters](https://trino.io/docs/current/connector/hive-s3.html) by adding parameters to [trino-setup/trino-catalog-hive.properties](./trino-setup/trino-catalog-hive.properties)
 * **NOTE:** the `hive.metastore.glue.iam-role` property is dynamically set in [trino-setup/trino-build-hive-properties.sh]. You don't need to set this.
 
